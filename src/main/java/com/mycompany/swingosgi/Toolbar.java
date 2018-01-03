@@ -1,6 +1,5 @@
 package com.mycompany.swingosgi;
 
-import com.mycompany.secondbundle.TimeService;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 public class Toolbar extends JPanel implements ActionListener {
 
@@ -42,15 +40,6 @@ public class Toolbar extends JPanel implements ActionListener {
             // textPanel.appendText("Hello");
             if (textListener != null) {
                 textListener.textEmitted("Hello");
-            }
-            
-            ServiceReference timeRef = bc.getServiceReference(TimeService.class.getName());
-            if (timeRef != null) {
-                System.out.println("SERWIS DOSTEPNY");
-                TimeService timeService = (TimeService) bc.getService(timeRef);
-                System.out.println("Wiadomość z serwisu: " + timeService.getCurrentTime());
-            }else{
-                System.out.println("SERWIS NIEDOSTEPNY");
             }
             
         } else if (clicked == goodbyeButton) {

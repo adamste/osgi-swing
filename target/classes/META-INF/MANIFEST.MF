@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1513858152542
+Bnd-LastModified: 1514968188534
 Build-Jdk: 1.8.0_144
 Built-By: astepien1
 Bundle-Activator: com.mycompany.swingosgi.Activator
@@ -8,8 +8,8 @@ Bundle-Name: SwingOSGI OSGi Bundle
 Bundle-SymbolicName: com.mycompany.SwingOSGI
 Bundle-Version: 1.0.0.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
-Export-Package: com.mycompany.swingosgi;uses:="org.osgi.framework,com.my
- company.secondbundle,javax.swing";version="1.0.0.SNAPSHOT"
+Export-Package: com.mycompany.swingosgi;uses:="org.osgi.framework,javax.
+ swing,com.mycompany.secondbundle";version="1.0.0.SNAPSHOT"
 Import-Package: com.mycompany.secondbundle;version="[1.0,2)",javax.swing
  ,org.osgi.framework;version="[1.6,2)"
 Tool: Bnd-1.50.0

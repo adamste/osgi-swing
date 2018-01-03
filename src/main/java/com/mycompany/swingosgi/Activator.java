@@ -1,6 +1,7 @@
 package com.mycompany.swingosgi;
 
 import com.mycompany.secondbundle.TimeService;
+import javax.swing.SwingUtilities;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -11,17 +12,16 @@ import org.osgi.framework.ServiceReference;
 public class Activator implements BundleActivator, BundleListener {
 
     MainFrame frame;
+    BundleContext bc;
 
-    public void start(BundleContext bc) throws Exception {
-        frame = new MainFrame(bc);
-
-        ServiceReference timeRef = bc.getServiceReference(TimeService.class.getName());
-        if (timeRef != null) {
-            TimeService timeService = (TimeService) bc.getService(timeRef);
-            System.out.println("Wiadomość z serwisu: " + timeService.getCurrentTime());
-        }
+    public void start(final BundleContext bc) throws Exception {
+        this.bc=bc;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                frame = new MainFrame(bc);
+            }
+        });
         bc.addBundleListener(this);
-
     }
 
     public void stop(BundleContext context) throws Exception {
@@ -38,11 +38,14 @@ public class Activator implements BundleActivator, BundleListener {
         String symbolicName = event.getBundle().getSymbolicName();
         String type = typeAsString(event);
 
+        if (symbolicName.equals("com.mycompany.SecondBundle") && event.getType() == BundleEvent.STARTED) {
+            frame.showSecondTab();
+        } else if (symbolicName.equals("com.mycompany.SecondBundle")) {
+            frame.destroySecondTab();
+        }
         System.out.println("BundleChanged: " + symbolicName + ", event.type: " + type);
     }
 
-    
-    
     private static String typeAsString(BundleEvent event) {
         if (event == null) {
             return "null";
