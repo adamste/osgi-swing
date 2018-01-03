@@ -1,13 +1,11 @@
 package com.mycompany.swingosgi;
 
-import com.mycompany.secondbundle.TimeService;
 import javax.swing.SwingUtilities;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-import org.osgi.framework.ServiceReference;
 
 public class Activator implements BundleActivator, BundleListener {
 

@@ -1,80 +1,67 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.swingosgi;
 
-import com.mycompany.secondbundle.TimeService;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import com.mycompany.secondbundle.TabService;
 
-/**
- *
- * @author astepien1
- */
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
 
-//    private final TextPanel textPanel;
-//    private final Toolbar toolbar;
-    JPanel firstPanel = new JPanel();
-    JLabel firstLabel = new JLabel("First");
+    private final JPanel firstPanel = new JPanel();
+    private final JLabel firstLabel = new JLabel("First");
 
-    JPanel secondPanel;
-    JLabel secondLabel;
-    BundleContext bc;
-
-    JTabbedPane tabbedPane = new JTabbedPane();
+    private JPanel secondPanel;
+    private final BundleContext bc;
+    private final JButton btn1;
+    private JTextArea textArea;
+    private JTabbedPane tabbedPane = new JTabbedPane();
 
     public MainFrame(BundleContext bc) {
-        super("OSGi Example");
+        super("OSGi Example App");
         this.bc = bc;
 
         firstPanel.setLayout(new BorderLayout());
-        
+
         firstPanel.add(firstLabel, BorderLayout.CENTER);
-        JButton btn1=new JButton("OK");
+        btn1 = new JButton("OK");
+        btn1.addActionListener(this);
+
         firstPanel.add(btn1, BorderLayout.SOUTH);
+
+        firstPanel.add(createPanelWithTextArea());
+
         tabbedPane.add("First panel", firstPanel);
-        firstPanel.add(new JLabel("123123123"));
-        firstPanel.add(new JLabel("123123123"));
-        firstPanel.add(new JLabel("123123123"));
+
         showSecondTab();
         add(tabbedPane);
-        
-        
-
-//        setLayout(new BorderLayout());
-//        toolbar = new Toolbar(bc);
-//        textPanel = new TextPanel();
-//
-//        toolbar.setStringListener(new StringListener() {
-//            @Override
-//            public void textEmitted(String text) {
-//                textPanel.appendText(text);
-//            }
-//        });
-//
-//        add(toolbar, BorderLayout.NORTH);
-//        add(textPanel, BorderLayout.CENTER);
 
         setVisible(true);
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public final JPanel createPanelWithTextArea() {
+        JPanel panel = new JPanel(new BorderLayout());
+        textArea = new JTextArea();
+        panel.add(new JScrollPane(textArea), BorderLayout.CENTER);
+        return panel;
+    }
+
     public void showSecondTab() {
-        ServiceReference timeRef = bc.getServiceReference(TimeService.class.getName());
+        ServiceReference timeRef = bc.getServiceReference(TabService.class.getName());
         if (timeRef != null) {
-            TimeService timeService = (TimeService) bc.getService(timeRef);
-            secondPanel=timeService.getPanel();
-            tabbedPane.add(timeService.tabName, secondPanel);
+            TabService tabService = (TabService) bc.getService(timeRef);
+            secondPanel = tabService.getPanel();
+            tabbedPane.add(tabService.tabName, secondPanel);
         } else {
             System.out.println("Second bundle doesn't respond");
         }
@@ -86,5 +73,12 @@ public class MainFrame extends JFrame {
         tabbedPane.remove(secondPanel);
         this.validate();
         this.repaint();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        JButton clicked = (JButton) e.getSource();
+        if (clicked == btn1) {
+            textArea.append("You clicked 'OK' button!\n");
+        }
     }
 }
